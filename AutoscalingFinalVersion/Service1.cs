@@ -23,7 +23,16 @@ namespace AutoscalingFinalVersion
         
         //Time before evaluating requests
         private int updateTimeEvaluation = 15000;
-                
+
+        //Cooldown variables
+        private bool cooldownAS;
+        private bool cooldownES;
+
+        //ES index
+        private string indexESDATA = "000015";
+        
+        //AS Status array
+        private string[] ASMachinesStatus; //index,Name,ip,status(up/down)
         public Service1()
         {
             InitializeComponent();
@@ -45,6 +54,97 @@ namespace AutoscalingFinalVersion
             httpServer = new MyHttpServer(8080);
             threadHttp = new System.Threading.Thread(new System.Threading.ThreadStart(httpServer.listen));
             threadHttp.Start();
+
+            //Retrieve the last index given to all kinds of machines
+            string pathIndexes = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\Indexes\\IndexData.txt";
+            StreamReader srIndexes = new StreamReader(pathIndexes);
+            string indexValue;
+            List<string> indexesValues = new List<string>();
+            while ((indexValue = srIndexes.ReadLine()) != null)
+            {
+                indexesValues.Add(indexValue);
+            }
+            srIndexes.Close();
+     
+            indexESDATA = GetLastInstanceOf(indexesValues, "indexESDATA");
+        }
+        private string GetLastInstanceOf(List<string> Indexes, string Index)
+        {
+            foreach (string a in Indexes)
+            {
+                string[] toCompare = a.Split(':');
+                WriteToLogFile(toCompare[0]);
+                if (toCompare[0] == Index)
+                {
+                    return toCompare[1];
+                }
+            }
+            return "000000";
+        }
+        private string GetNextESData()
+        {
+            int indexESDataInt = Int32.Parse(indexESDATA);
+            indexESDataInt++;
+            if (indexESDataInt < 10)
+            {
+                string toOutput = "00000" + indexESDataInt;
+                indexESDATA = toOutput;
+            }
+            else if (indexESDataInt >= 10 && indexESDataInt < 100)
+            {
+                string toOutput = "0000" + indexESDataInt;
+                indexESDATA = toOutput;
+            }
+            else if (indexESDataInt >= 100 && indexESDataInt < 1000)
+            {
+                string toOutput = "000" + indexESDataInt;
+                indexESDATA = toOutput;
+            }
+            else if (indexESDataInt >= 1000 && indexESDataInt < 10000)
+            {
+                string toOutput = "00" + indexESDataInt;
+                indexESDATA = toOutput;
+            }
+            else if (indexESDataInt >= 10000 && indexESDataInt < 100000)
+            {
+                string toOutput = "0" + indexESDataInt;
+                indexESDATA = toOutput;
+            }
+            else if (indexESDataInt >= 100000)
+            {
+                string toOutput = "" + indexESDataInt;
+                indexESDATA = toOutput;
+            }
+            return indexESDATA;
+        }
+        private void WriteIndexes()
+        {
+            string pathIndexes = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\Indexes";
+            string pathIndexesFile = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\Indexes\\IndexData.txt";
+
+            if (!Directory.Exists(pathIndexes))
+            {
+                Directory.CreateDirectory(pathIndexes);
+            }
+
+            if (!File.Exists(pathIndexesFile))
+            {
+                // Create a file to write to.   
+                using (StreamWriter sw = File.CreateText(pathIndexesFile))
+                {
+                    sw.WriteLine("indexESDATA:" + indexESDATA); //make the same for the other kinds
+                }
+            }
+            else
+            {
+                File.Delete(pathIndexesFile);
+                File.Delete(pathIndexesFile);
+                using (StreamWriter sw = File.CreateText(pathIndexesFile))
+                {
+                    sw.WriteLine("indexESDATA:" + indexESDATA); //make the same for the other kinds
+                }
+            }
+
         }
         private void EvaluatePerformance(object source, ElapsedEventArgs e)
         {
@@ -135,33 +235,15 @@ namespace AutoscalingFinalVersion
                                 case "timeStamp":
                                     break;
                                 case "metric1":
-                                    int threshold = 100;
-                                    threshold = GetMetric(metrics, "metric1");
-
-                                    if (Convert.ToInt32(infoSplited[1]) > threshold) //retrieves the seuil from a file
-                                    {
-                                        WriteToFileActions("--->" + Path.GetFileName(filePath) + " , Metric " + infoSplited[0] + ":" + infoSplited[1] + " overpasses " + threshold);
-                                        //trigers actions
-
-                                        /* adaptarlo a los AS_WEB
-                                        using (PowerShell PowerShellInstance = PowerShell.Create())
-                                        {
-                                            string lastIndex = indexESDATA;
-                                            string newindexESDATA = GetNextESData();
-                                            indexESDATA = newindexESDATA;
-                                            PowerShellInstance.AddScript("(Get-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Terraform\\TerraformESDataVM\\variablesDynamic.tf -Raw) -replace '" + lastIndex + "', '" + newindexESDATA + "' | Set-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Terraform\\TerraformESDataVM\\variablesDynamic.tf");
-                                            PowerShellInstance.AddScript("(Get-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\ES_DATA.ps1 -Raw) -replace 'LOGS_ES_DATA_" + lastIndex + "', 'LOGS_ES_DATA_" + newindexESDATA + "' | Set-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\ES_DATA.ps1");
-                                            PowerShellInstance.Invoke();
-
-                                            PowerShellInstance.AddScript("cd C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\");
-                                            string readText = File.ReadAllText("C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\ES_DATA.ps1");
-
-                                            PowerShellInstance.AddScript(readText);
-                                            PowerShellInstance.Invoke();
-                                            WriteToFile("script done");
-                                        }*/
-                                    }
+                                    analyseRequest("metric1", metrics, machineType, infoSplited);
                                     break;
+                                case "metric2":
+                                    analyseRequest("metric2", metrics, machineType, infoSplited);
+                                    break;
+                                case "metric3":
+                                    analyseRequest("metric3", metrics, machineType, infoSplited);
+                                    break;
+
                             }
                         }
                     }
@@ -180,9 +262,68 @@ namespace AutoscalingFinalVersion
             }
             return 0;
         }
+        private int analyseRequest(string metricName, List<string> metrics, string machineType, string[] infoSplited)
+        {
+            int threshold;
+            threshold = GetMetric(metrics, "metric1");
+            if (threshold == 0)
+            {
+                WriteToLogFile("Metric 1 threshold not found");
+                return 0;
+            }
+            else
+            {
+                if (Convert.ToInt64(infoSplited[0]) >= threshold)
+                {
+                    if (machineType == "AS_WEB")
+                    {
+                        //Create machine function
+                        if (cooldownAS)
+                        {
+                            WriteToLogFile("Still in cooldown, waiting to create a new instance");
+                        }
+                        else
+                        {
+                            //Create machine AS
+
+                        }
+                    }
+                    else if (machineType == "ES")
+                    {
+                        //Create machine ES
+                        WriteToFileActions("--->" + Path.GetFileName(filePath) + " , Metric " + infoSplited[0] + ":" + infoSplited[1] + " overpasses " + threshold);
+                        //trigers actions
+                        using (PowerShell PowerShellInstance = PowerShell.Create())
+                        {
+                            string lastIndex = indexESDATA;
+                            string newindexESDATA = GetNextESData();
+                            indexESDATA = newindexESDATA;
+                            PowerShellInstance.AddScript("(Get-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Terraform\\TerraformESDataVM\\variablesDynamic.tf -Raw) -replace '" + lastIndex + "', '" + newindexESDATA + "' | Set-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Terraform\\TerraformESDataVM\\variablesDynamic.tf");
+                            PowerShellInstance.AddScript("(Get-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\ES_DATA.ps1 -Raw) -replace 'LOGS_ES_DATA_" + lastIndex + "', 'LOGS_ES_DATA_" + newindexESDATA + "' | Set-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\ES_DATA.ps1");
+                            PowerShellInstance.Invoke();
+
+                            PowerShellInstance.AddScript("cd C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\");
+                            string readText = File.ReadAllText("C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\ES_DATA.ps1");
+
+                            PowerShellInstance.AddScript(readText);
+                            PowerShellInstance.Invoke();
+                            WriteToLogFile("script done");
+                        }
+                    }
+                }
+                return 0;
+            }
+        }
+
+        private void createAS(string indexAS)
+        {
+            //.\createMachine.ps1 -location "West Europe" -ResourceGroupName "WE-QA-G" -vnetName "WE-QA-G-VNET" -vsubnetName "AS" -index "000001" -sprintNumber "174"
+        }
+
         protected override void OnStop()
         {
             WriteToLogFile("Service is stopped at " + DateTime.Now);
+            WriteIndexes();
         }
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
