@@ -1,4 +1,4 @@
-﻿namespace MyFirstService
+﻿namespace AutoscalingFinalVersion
 {
     partial class Service1
     {
