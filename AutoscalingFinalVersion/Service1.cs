@@ -5,10 +5,14 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using Microsoft.Azure.Management.Automation;
+using System.Management.Automation;
+using System.Management.Automation.Runspaces;
 
 namespace AutoscalingFinalVersion
 {
@@ -25,14 +29,18 @@ namespace AutoscalingFinalVersion
         private int updateTimeEvaluation = 15000;
 
         //Cooldown variables
-        private bool cooldownAS;
-        private bool cooldownES;
+        private bool cooldownAS = false;
+        private bool cooldownES = false;
 
         //ES index
         private string indexESDATA = "000015";
         
         //AS Status array
-        private string[] ASMachinesStatus; //index,Name,ip,status(up/down)
+        private string[,] ASMachinesStatus = new string[5,3]; //index,Name,ip,status(up/down)
+
+        //Time stamp last creation or deletion
+        private long timeMillisecond = 0;
+
         public Service1()
         {
             InitializeComponent();
@@ -54,6 +62,7 @@ namespace AutoscalingFinalVersion
             httpServer = new MyHttpServer(8080);
             threadHttp = new System.Threading.Thread(new System.Threading.ThreadStart(httpServer.listen));
             threadHttp.Start();
+                     
 
             //Retrieve the last index given to all kinds of machines
             string pathIndexes = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\Indexes\\IndexData.txt";
@@ -67,13 +76,75 @@ namespace AutoscalingFinalVersion
             srIndexes.Close();
      
             indexESDATA = GetLastInstanceOf(indexesValues, "indexESDATA");
+            fullfillTableAS();
         }
+
+        private void fullfillTimeLastCreation()
+        {
+            string pathFile = AppDomain.CurrentDomain.BaseDirectory + "Logs\\Cooldowns\\LastCreationAS.txt";
+            StreamReader sr = new StreamReader(pathFile);
+            string asInformation = sr.ReadLine();
+            string[]asInformationSplitted = asInformation.Split(':');
+            timeMillisecond = Convert.ToInt64(asInformationSplitted[1]);
+            sr.Close();
+        }
+
+        private void writeToCooldownFile()
+        {
+            string pathFile = AppDomain.CurrentDomain.BaseDirectory + "Logs\\Cooldowns\\LastCreationAS.txt";
+            if (!File.Exists(pathFile))
+            {
+                // Create a file to write to.   
+                using (StreamWriter sw = File.CreateText(pathFile))
+                {
+                    sw.WriteLine("TimeStamp:" + timeMillisecond); //make the same for the other kinds
+                }
+            }
+            else
+            {
+                File.Delete(pathFile);
+                File.Delete(pathFile);
+                using (StreamWriter sw = File.CreateText(pathFile))
+                {
+                    sw.WriteLine("TimeStamp:" + timeMillisecond); //make the same for the other kinds
+                }
+            }
+        }
+
+        private void fullfillTableAS()
+        {
+            string pathIndexesFile = AppDomain.CurrentDomain.BaseDirectory + "\\Resources\\CREATE_VM_FROM_IMAGE\\IPConfigs\\ipFix.txt";
+            StreamReader sr = new StreamReader(pathIndexesFile);
+            
+            int i = 0;
+            string asInformation;
+            while ((asInformation = sr.ReadLine()) != null)
+            {
+                string[] splittedInfomrations = asInformation.Split(',');
+                ASMachinesStatus[i, 0] = splittedInfomrations[0];
+                ASMachinesStatus[i, 1] = splittedInfomrations[1];
+                ASMachinesStatus[i, 2] = splittedInfomrations[2];
+                i = i + 1;
+            }
+            sr.Close();
+
+            WriteToLogFile("Fullfilling table with the current AS status");
+            i = 0;
+            for (i = 0; i < 5; i++)
+            {
+                if(ASMachinesStatus[i, 0] != null)
+                {
+                    WriteToLogFile("Name : " + ASMachinesStatus[i, 0] + " IP : " + ASMachinesStatus[i, 1] + " Status : " + ASMachinesStatus[i, 2]);
+                }
+            }
+                
+        }
+
         private string GetLastInstanceOf(List<string> Indexes, string Index)
         {
             foreach (string a in Indexes)
             {
                 string[] toCompare = a.Split(':');
-                WriteToLogFile(toCompare[0]);
                 if (toCompare[0] == Index)
                 {
                     return toCompare[1];
@@ -221,7 +292,7 @@ namespace AutoscalingFinalVersion
                         srMetrics.Close();
 
                         foreach (string line in informations)
-                        {
+                        { 
                             string[] infoSplited = line.Split(':');
                             switch (infoSplited[0])
                             {
@@ -235,13 +306,13 @@ namespace AutoscalingFinalVersion
                                 case "timeStamp":
                                     break;
                                 case "metric1":
-                                    analyseRequest("metric1", metrics, machineType, infoSplited);
+                                    analyseRequest("metric1", metrics, machineType, infoSplited,filePath);
                                     break;
                                 case "metric2":
-                                    analyseRequest("metric2", metrics, machineType, infoSplited);
+                                    analyseRequest("metric2", metrics, machineType, infoSplited, filePath);
                                     break;
                                 case "metric3":
-                                    analyseRequest("metric3", metrics, machineType, infoSplited);
+                                    analyseRequest("metric3", metrics, machineType, infoSplited, filePath);
                                     break;
 
                             }
@@ -262,30 +333,56 @@ namespace AutoscalingFinalVersion
             }
             return 0;
         }
-        private int analyseRequest(string metricName, List<string> metrics, string machineType, string[] infoSplited)
+        private int analyseRequest(string metricName, List<string> metrics, string machineType, string[] infoSplited, string filePath)
         {
             int threshold;
-            threshold = GetMetric(metrics, "metric1");
+            threshold = GetMetric(metrics, metricName);
             if (threshold == 0)
             {
-                WriteToLogFile("Metric 1 threshold not found");
+                WriteToFileActions("Metric 1 threshold not found");
                 return 0;
             }
             else
             {
-                if (Convert.ToInt64(infoSplited[0]) >= threshold)
+                if (Convert.ToInt64(infoSplited[1]) >= threshold)
                 {
+                    DateTime baseDate = new DateTime(1970, 1, 1);
+                    TimeSpan diff = DateTime.Now - baseDate;
+                    double milisTime = diff.TotalMilliseconds;
+                    long timeCheck = Convert.ToInt64(milisTime);
+
                     if (machineType == "AS_WEB")
-                    {
+                    {   
                         //Create machine function
-                        if (cooldownAS)
+                        if (timeCheck- timeMillisecond < 150000)
                         {
-                            WriteToLogFile("Still in cooldown, waiting to create a new instance");
+                            long timeLeft = 150000 - (timeCheck - timeMillisecond);
+                            long timeLeftSeconds = timeLeft / 1000;
+
+                            WriteToFileActions("Still in cooldown, refused to create a new instance, time left " + timeLeft + " milliseconds");
                         }
                         else
                         {
-                            //Create machine AS
-
+                            bool picked = false;
+                            int index = 0;
+                            string[] nameCutted = null;
+                            while (!picked)
+                            {
+                                if (ASMachinesStatus[index, 2] == "down")
+                                {
+                                    picked = true;
+                                    nameCutted = ASMachinesStatus[index, 0].Split('W');
+                                    ASMachinesStatus[index, 2] = "up";
+                                    //Calculates the time passed since the creation
+                                    timeMillisecond = timeCheck;
+                                    writeToCooldownFile();
+                                }
+                                index = index + 1;
+                            }
+                            WriteToFileActions(ASMachinesStatus[index, 2]);
+                            WriteToFileActions("Creating machine AS_WEB " + nameCutted[1]);
+                            WriteIndexesAS();
+                            cooldownAS = true;
                         }
                     }
                     else if (machineType == "ES")
@@ -295,6 +392,7 @@ namespace AutoscalingFinalVersion
                         //trigers actions
                         using (PowerShell PowerShellInstance = PowerShell.Create())
                         {
+                            //A adapter
                             string lastIndex = indexESDATA;
                             string newindexESDATA = GetNextESData();
                             indexESDATA = newindexESDATA;
@@ -313,6 +411,43 @@ namespace AutoscalingFinalVersion
                 }
                 return 0;
             }
+        }
+
+        private void WriteIndexesAS()
+        {
+            string pathIndexesFile = AppDomain.CurrentDomain.BaseDirectory + "Resources\\CREATE_VM_FROM_IMAGE\\IPConfigs\\ipFix.txt";
+            if (!File.Exists(pathIndexesFile))
+            {
+                // Create a file to write to.   
+                using (StreamWriter sw = File.CreateText(pathIndexesFile))
+                {
+                    int i = 0;
+                    for (i = 0; i < 5; i++)
+                    {
+                        if (ASMachinesStatus[i, 0] != "")
+                        {
+                            WriteToLogFile(ASMachinesStatus[i, 0] + "," + ASMachinesStatus[i, 1] + "," + ASMachinesStatus[i, 2]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                File.Delete(pathIndexesFile);
+                using (StreamWriter sw = File.CreateText(pathIndexesFile))
+                {
+                   
+                    int i = 0;
+                    for (i = 0; i < 5; i++)
+                    {
+                        if (ASMachinesStatus[i, 0] != "")
+                        {
+                            sw.WriteLine(ASMachinesStatus[i, 0] + "," + ASMachinesStatus[i, 1] + "," + ASMachinesStatus[i, 2]);
+                        }
+                    }
+                }
+            }
+
         }
 
         private void createAS(string indexAS)
