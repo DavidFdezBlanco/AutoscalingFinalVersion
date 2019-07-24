@@ -24,7 +24,7 @@ namespace AutoscalingFinalVersion
 
         public override void handlePOSTRequest(HttpProcessor p, StreamReader inputData)
         {
-            WriteToFile("*** POST request:" + p.http_url + "treated and metrics stocked \n");
+            WriteToFileActions("*** POST request:" + p.http_url + " treated and metrics stocked");
             p.writeSuccess();
             p.outputStream.WriteLine("<html><body><h1>Request Treated {0}</h1>", p.http_url);
         }
@@ -37,6 +37,30 @@ namespace AutoscalingFinalVersion
                 Directory.CreateDirectory(path);
             }
             string filepath = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\ServiceLogs\\ServiceLog_" + DateTime.Now.Date.ToShortDateString().Replace('/', '_') + ".txt";
+            if (!File.Exists(filepath))
+            {
+                // Create a file to write to.   
+                using (StreamWriter sw = File.CreateText(filepath))
+                {
+                    sw.WriteLine(Message);
+                }
+            }
+            else
+            {
+                using (StreamWriter sw = File.AppendText(filepath))
+                {
+                    sw.WriteLine(Message);
+                }
+            }
+        }
+        public void WriteToFileActions(string Message)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\Actions";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            string filepath = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\Actions\\ServiceLog_" + DateTime.Now.Date.ToShortDateString().Replace('/', '_') + ".txt";
             if (!File.Exists(filepath))
             {
                 // Create a file to write to.   

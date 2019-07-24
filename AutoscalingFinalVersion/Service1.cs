@@ -34,7 +34,8 @@ namespace AutoscalingFinalVersion
 
         //ES index
         private string indexESDATA = "000015";
-        
+        private int activeAS = 0;
+
         //AS Status array
         private string[,] ASMachinesStatus = new string[5,3]; //index,Name,ip,status(up/down)
 
@@ -63,7 +64,6 @@ namespace AutoscalingFinalVersion
             threadHttp = new System.Threading.Thread(new System.Threading.ThreadStart(httpServer.listen));
             threadHttp.Start();
                      
-
             //Retrieve the last index given to all kinds of machines
             string pathIndexes = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\Indexes\\IndexData.txt";
             StreamReader srIndexes = new StreamReader(pathIndexes);
@@ -117,6 +117,7 @@ namespace AutoscalingFinalVersion
             StreamReader sr = new StreamReader(pathIndexesFile);
             
             int i = 0;
+            activeAS = 0;
             string asInformation;
             while ((asInformation = sr.ReadLine()) != null)
             {
@@ -124,20 +125,51 @@ namespace AutoscalingFinalVersion
                 ASMachinesStatus[i, 0] = splittedInfomrations[0];
                 ASMachinesStatus[i, 1] = splittedInfomrations[1];
                 ASMachinesStatus[i, 2] = splittedInfomrations[2];
+                if(ASMachinesStatus[i, 2] == "up")
+                {
+                    activeAS = activeAS + 1;
+                }
                 i = i + 1;
             }
             sr.Close();
+            asGlobalStatus(0);
+        }
 
-            WriteToLogFile("Fullfilling table with the current AS status");
-            i = 0;
-            for (i = 0; i < 5; i++)
+        private void asGlobalStatus(int LogorAction)
+        {
+            activeAS = 0;
+            if (LogorAction == 0)
             {
-                if(ASMachinesStatus[i, 0] != null)
+                int i = 0;
+                for (i = 0; i < 5; i++)
                 {
-                    WriteToLogFile("Name : " + ASMachinesStatus[i, 0] + " IP : " + ASMachinesStatus[i, 1] + " Status : " + ASMachinesStatus[i, 2]);
+                    if (ASMachinesStatus[i, 0] != null)
+                    {
+                        if (ASMachinesStatus[i, 2] == "up")
+                        {
+                            activeAS = activeAS + 1;
+                        }
+                        WriteToLogFile("Name : " + ASMachinesStatus[i, 0] + " IP : " + ASMachinesStatus[i, 1] + " Status : " + ASMachinesStatus[i, 2]);
+                    }
                 }
+                WriteToLogFile("Fullfilling table with the current AS status, currently " + activeAS + " AS up");
             }
-                
+            else
+            {
+                int i = 0;
+                for (i = 0; i < 5; i++)
+                {
+                    if (ASMachinesStatus[i, 0] != null)
+                    {
+                        if (ASMachinesStatus[i, 2] == "up")
+                        {
+                            activeAS = activeAS + 1;
+                        }
+                        WriteToFileActions("Name : " + ASMachinesStatus[i, 0] + " IP : " + ASMachinesStatus[i, 1] + " Status : " + ASMachinesStatus[i, 2]);
+                    }
+                }
+                WriteToFileActions("Fullfilling table with the current AS status, currently " + activeAS + " AS are up");
+            }
         }
 
         private string GetLastInstanceOf(List<string> Indexes, string Index)
@@ -246,12 +278,12 @@ namespace AutoscalingFinalVersion
                     {
                         //nothing happens, we dont treat this file anymore, too old
                         File.Delete(filePath);
-                        WriteToFileActions("\n[" + DateTime.Now + "] File " + Path.GetFileName(filePath) + " deleted because the actions already took place.");
+                        WriteToFileActions("[" + DateTime.Now + "] File " + Path.GetFileName(filePath) + " deleted because the actions already took place.");
                     }
                     else
                     {
                         long result = timeCheck - timestampFile;
-                        WriteToFileActions("\n[" + DateTime.Now + "] Analysing " + Path.GetFileName(filePath));
+                        WriteToFileActions("[" + DateTime.Now + "] Analysing " + Path.GetFileName(filePath));
 
                         //variables used for stocking the file information
                         string information;
@@ -306,13 +338,13 @@ namespace AutoscalingFinalVersion
                                 case "timeStamp":
                                     break;
                                 case "metric1":
-                                    analyseRequest("metric1", metrics, machineType, infoSplited,filePath);
+                                    AnalyseRequest("metric1", metrics, machineType, infoSplited,filePath);
                                     break;
                                 case "metric2":
-                                    analyseRequest("metric2", metrics, machineType, infoSplited, filePath);
+                                    AnalyseRequest("metric2", metrics, machineType, infoSplited, filePath);
                                     break;
                                 case "metric3":
-                                    analyseRequest("metric3", metrics, machineType, infoSplited, filePath);
+                                    AnalyseRequest("metric3", metrics, machineType, infoSplited, filePath);
                                     break;
 
                             }
@@ -321,30 +353,54 @@ namespace AutoscalingFinalVersion
                 }
             }
         }
-        private int GetMetric(List<string> Metrics, string meticName)
+        private int GetMetricUP (List<string> Metrics, string meticName)
         {
             foreach (string a in Metrics)
             {
+                //WriteToFileActions("Current AS actives: " + activeAS);
                 string[] toCompare = a.Split(':');
                 if (toCompare[0] == meticName)
                 {
-                    return Convert.ToInt32(toCompare[1]);
+                    string[] metricsSplitted = toCompare[1].Split('/');
+                    //WriteToFileActions("Threshold: " + metricsSplitted[activeAS]);
+                    return Convert.ToInt32(metricsSplitted[activeAS]);
                 }
             }
             return 0;
         }
-        private int analyseRequest(string metricName, List<string> metrics, string machineType, string[] infoSplited, string filePath)
+        private int GetMetricDown(List<string> Metrics, string meticName)
         {
-            int threshold;
-            threshold = GetMetric(metrics, metricName);
-            if (threshold == 0)
+            foreach (string a in Metrics)
+            {
+                //WriteToFileActions("Current AS actives: " + activeAS);
+                string[] toCompare = a.Split(':');
+                if (toCompare[0] == meticName)
+                {
+                    string[] metricsSplitted = toCompare[1].Split('/');
+                    if(activeAS >=1)
+                    {
+                        //WriteToFileActions("Threshold: " + metricsSplitted[activeAS]);
+                        return Convert.ToInt32(metricsSplitted[activeAS-1]);
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
+            return 0;
+        }
+
+        private int createMachineAnalise(string metricName, List<string> metrics, string machineType, string[] infoSplited, string filePath, int thresholdUP)
+        {
+            if (thresholdUP == -1)
             {
                 WriteToFileActions("Metric 1 threshold not found");
                 return 0;
             }
             else
             {
-                if (Convert.ToInt64(infoSplited[1]) >= threshold)
+                if (Convert.ToInt64(infoSplited[1]) >= thresholdUP)
                 {
                     DateTime baseDate = new DateTime(1970, 1, 1);
                     TimeSpan diff = DateTime.Now - baseDate;
@@ -352,21 +408,21 @@ namespace AutoscalingFinalVersion
                     long timeCheck = Convert.ToInt64(milisTime);
 
                     if (machineType == "AS_WEB")
-                    {   
+                    {
                         //Create machine function
-                        if (timeCheck- timeMillisecond < 150000)
+                        if (timeCheck - timeMillisecond < 150000)
                         {
                             long timeLeft = 150000 - (timeCheck - timeMillisecond);
                             long timeLeftSeconds = timeLeft / 1000;
 
-                            WriteToFileActions("Still in cooldown, refused to create a new instance, time left " + timeLeft + " milliseconds");
+                            WriteToFileActions("Still in cooldown, refused to create a new instance, time left " + timeLeftSeconds + " seconds");
                         }
                         else
                         {
                             bool picked = false;
                             int index = 0;
                             string[] nameCutted = null;
-                            while (!picked)
+                            while (!picked || index < 4)
                             {
                                 if (ASMachinesStatus[index, 2] == "down")
                                 {
@@ -379,38 +435,88 @@ namespace AutoscalingFinalVersion
                                 }
                                 index = index + 1;
                             }
-                            WriteToFileActions(ASMachinesStatus[index, 2]);
                             WriteToFileActions("Creating machine AS_WEB " + nameCutted[1]);
                             WriteIndexesAS();
+                            asGlobalStatus(1);
                             cooldownAS = true;
                         }
                     }
                     else if (machineType == "ES")
                     {
-                        //Create machine ES
-                        WriteToFileActions("--->" + Path.GetFileName(filePath) + " , Metric " + infoSplited[0] + ":" + infoSplited[1] + " overpasses " + threshold);
-                        //trigers actions
-                        using (PowerShell PowerShellInstance = PowerShell.Create())
-                        {
-                            //A adapter
-                            string lastIndex = indexESDATA;
-                            string newindexESDATA = GetNextESData();
-                            indexESDATA = newindexESDATA;
-                            PowerShellInstance.AddScript("(Get-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Terraform\\TerraformESDataVM\\variablesDynamic.tf -Raw) -replace '" + lastIndex + "', '" + newindexESDATA + "' | Set-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Terraform\\TerraformESDataVM\\variablesDynamic.tf");
-                            PowerShellInstance.AddScript("(Get-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\ES_DATA.ps1 -Raw) -replace 'LOGS_ES_DATA_" + lastIndex + "', 'LOGS_ES_DATA_" + newindexESDATA + "' | Set-Content -Path C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\ES_DATA.ps1");
-                            PowerShellInstance.Invoke();
-
-                            PowerShellInstance.AddScript("cd C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\");
-                            string readText = File.ReadAllText("C:\\Users\\Fernandezblanco\\source\\repos\\DavidLys\\TCPServerTest\\TCPServerTest\\bin\\Debug\\Scripts\\Powershell\\ES_DATA\\ES_DATA.ps1");
-
-                            PowerShellInstance.AddScript(readText);
-                            PowerShellInstance.Invoke();
-                            WriteToLogFile("script done");
-                        }
+                        //Create machine ES to be copied from version before
                     }
                 }
                 return 0;
             }
+        }
+        private int destroyMachineAnalise(string metricName, List<string> metrics, string machineType, string[] infoSplited, string filePath, int thresholdDown)
+        {
+            if (thresholdDown == -1)
+            {
+                WriteToFileActions("Metric 1 threshold not found");
+                return 0;
+            }
+            else
+            {
+                if (Convert.ToInt64(infoSplited[1]) < thresholdDown)
+                {
+                    DateTime baseDate = new DateTime(1970, 1, 1);
+                    TimeSpan diff = DateTime.Now - baseDate;
+                    double milisTime = diff.TotalMilliseconds;
+                    long timeCheck = Convert.ToInt64(milisTime);
+
+                    if (machineType == "AS_WEB")
+                    {
+                        //Create machine function
+                        if (timeCheck - timeMillisecond < 150000)
+                        {
+                            long timeLeft = 150000 - (timeCheck - timeMillisecond);
+                            long timeLeftSeconds = timeLeft / 1000;
+
+                            WriteToFileActions("Still in cooldown, refused to destroy a new instance, time left " + timeLeftSeconds + " seconds");
+                        }
+                        else
+                        {
+                            bool picked = false;
+                            int index = 4;
+                            string[] nameCutted = null;
+                            while (!picked || index >= 0)
+                            {
+                                if (ASMachinesStatus[index, 2] == "up")
+                                {
+                                    picked = true;
+                                    nameCutted = ASMachinesStatus[index, 0].Split('W');
+                                    ASMachinesStatus[index, 2] = "down";
+                                    //Calculates the time passed since the creation
+                                    timeMillisecond = timeCheck;
+                                    writeToCooldownFile();
+                                }
+                                index = index - 1;
+                            }
+                            WriteToFileActions("Destroying machine AS_WEB " + nameCutted[1]);
+                            WriteIndexesAS();
+                            asGlobalStatus(1);
+                            cooldownAS = true;
+                        }
+                    }
+                    else if (machineType == "ES")
+                    {
+                        //Create machine ES to be copied from version before
+                    }
+                }
+                return 0;
+            }
+        }
+
+        private void AnalyseRequest(string metricName, List<string> metrics, string machineType, string[] infoSplited, string filePath)
+        {
+            int thresholdUP = -1;
+            thresholdUP = GetMetricUP(metrics, metricName);
+            int thresholdDown = -1;
+            thresholdDown = GetMetricDown(metrics, metricName);
+
+            createMachineAnalise(metricName, metrics, machineType, infoSplited, filePath, thresholdUP);
+            destroyMachineAnalise(metricName, metrics, machineType, infoSplited, filePath, thresholdDown);
         }
 
         private void WriteIndexesAS()

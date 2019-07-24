@@ -88,7 +88,7 @@ namespace AutoscalingFinalVersion
             http_method = tokens[0].ToUpper();
             http_url = tokens[1];
             http_protocol_versionstring = tokens[2];
-
+            WriteToFileActions("");
             WriteToFileActions("*** Treating: " + request);
 
             WriteData(http_url);
