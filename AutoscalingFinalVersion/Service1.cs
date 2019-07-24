@@ -393,6 +393,7 @@ namespace AutoscalingFinalVersion
 
         private int createMachineAnalise(string metricName, List<string> metrics, string machineType, string[] infoSplited, string filePath, int thresholdUP)
         {
+            WriteToFileActions("threshold up:" + thresholdUP);
             if (thresholdUP == -1)
             {
                 WriteToFileActions("Metric 1 threshold not found");
@@ -422,7 +423,7 @@ namespace AutoscalingFinalVersion
                             bool picked = false;
                             int index = 0;
                             string[] nameCutted = null;
-                            while (!picked || index < 4)
+                            while (!picked)
                             {
                                 if (ASMachinesStatus[index, 2] == "down")
                                 {
@@ -451,6 +452,8 @@ namespace AutoscalingFinalVersion
         }
         private int destroyMachineAnalise(string metricName, List<string> metrics, string machineType, string[] infoSplited, string filePath, int thresholdDown)
         {
+            WriteToFileActions("threshold down:" + thresholdDown);
+            //To debug
             if (thresholdDown == -1)
             {
                 WriteToFileActions("Metric 1 threshold not found");
@@ -480,7 +483,7 @@ namespace AutoscalingFinalVersion
                             bool picked = false;
                             int index = 4;
                             string[] nameCutted = null;
-                            while (!picked || index >= 0)
+                            while (!picked)
                             {
                                 if (ASMachinesStatus[index, 2] == "up")
                                 {
