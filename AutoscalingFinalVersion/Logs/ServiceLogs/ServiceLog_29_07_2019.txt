@@ -1,0 +1,307 @@
+Service is started at 29/07/2019 10:48:05
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is stopped at 29/07/2019 10:48:18
+Service is started at 29/07/2019 11:16:06
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is recall at 29/07/2019 11:16:56
+Service is recall at 29/07/2019 11:17:46
+Service is stopped at 29/07/2019 11:18:10
+Service is recall at 29/07/2019 11:18:36
+Service is started at 29/07/2019 11:19:02
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:19:37
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:20:16
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:21:04
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:23:01
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:26:27
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:26:29
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:27:03
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:29:26
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:32:25
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:33:23
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:40:15
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is stopped at 29/07/2019 11:40:21
+Service is started at 29/07/2019 11:40:24
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:41:20
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is stopped at 29/07/2019 11:41:26
+Service is started at 29/07/2019 11:41:29
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 11:42:24
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is recall at 29/07/2019 11:43:14
+Service is recall at 29/07/2019 11:44:04
+Service is recall at 29/07/2019 11:44:54
+Service is recall at 29/07/2019 11:45:44
+Service is recall at 29/07/2019 11:46:34
+Service is recall at 29/07/2019 11:47:25
+Service is recall at 29/07/2019 11:48:15
+Service is recall at 29/07/2019 11:49:05
+Service is recall at 29/07/2019 11:49:55
+Service is recall at 29/07/2019 11:50:45
+Service is recall at 29/07/2019 11:51:35
+Service is recall at 29/07/2019 11:52:25
+Service is recall at 29/07/2019 11:53:15
+Service is recall at 29/07/2019 11:54:05
+Service is recall at 29/07/2019 11:54:55
+Service is recall at 29/07/2019 11:55:45
+Service is recall at 29/07/2019 11:56:35
+Service is recall at 29/07/2019 11:57:25
+Service is recall at 29/07/2019 11:58:15
+Service is recall at 29/07/2019 11:59:05
+Service is recall at 29/07/2019 11:59:55
+Service is recall at 29/07/2019 12:00:45
+Service is stopped at 29/07/2019 12:00:48
+Service is started at 29/07/2019 12:02:58
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 12:03:34
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 12:04:17
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 12:06:41
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 12:06:54
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 12:07:09
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:37:12
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is recall at 29/07/2019 13:38:02
+Service is recall at 29/07/2019 13:38:52
+Service is recall at 29/07/2019 13:39:42
+Service is stopped at 29/07/2019 13:39:55
+Service is started at 29/07/2019 13:40:45
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:41:30
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:43:05
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:43:31
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:44:01
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:48:14
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:48:50
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:50:11
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:56:03
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:56:56
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:57:03
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:57:07
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:59:34
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up
+Service is started at 29/07/2019 13:59:43
+HTTP Server Initialized Listening on port: 8080
+Name : QA-G-ASW000001 IP : 10.132.4.7 Status : down
+Name : QA-G-ASW000002 IP : 10.132.4.8 Status : down
+Name : QA-G-ASW000003 IP : 10.132.4.9 Status : down
+Name : QA-G-ASW000004 IP : 10.132.4.10 Status : down
+Fullfilling table with the current AS status, currently 0 AS up

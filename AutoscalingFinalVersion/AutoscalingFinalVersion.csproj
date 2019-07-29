@@ -90,11 +90,84 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\configureEnvironment.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\createMachine.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\createMachineTest.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\createMachineTest2.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\getMachine.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\arrangingFiles.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\mainConfiguration.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\ohai\plugins\dism_features.rb" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\ohai\plugins\esker.rb" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SetASDrives.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\checkandStartServices.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\functions.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\globalsASProcessing.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\globalsASWeb.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\globalsRS.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\leaveDomain.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\LoadUserProfileIIS_AS.cmd" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\removeComputer.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\scriptInitBootstrapAS.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\SpecializeProcessing.reg" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\SpecializeTemplate_Part1.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\SpecializeTemplate\SpecializeTemplate_Part2.ps1" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Templates\AS_WEB\ASWEBVMCreationFromImageTemplate.tf" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Templates\AS_WEB\output.tf" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\resources\Templates\AS_WEB\variables.tf" />
+    <None Include="Resources\CREATE_VM_FROM_IMAGE\test1.ps1" />
+    <None Include="Resources\DESTROY_VM\removeMachine.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\CreateTemplate.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\174-AS-W\toCreate-174.json" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\174-AS-W\WE-G-AS-W-TEMPLATE-174.json" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\CreateImage.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\CreateVMDisksFromSnapshot.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\removeAll.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\SnapshotAzureVM.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\step5_create_VMs.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\TemplateClean-174\functions.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\TemplateClean-174\globals.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\TemplateClean-174\registrySysprep.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\TemplateClean-174\templateClean.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\TemplateClean-174\turnOf.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\TemplateClean\functions.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\TemplateClean\globals.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\TemplateClean\registrySysprep.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\TemplateClean\templateClean.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\TemplateClean\turnOf.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\toCreateTemplate.json" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\WE-G-AS-W-TEMPLATE.json" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\ressources\windows_1NIC_NOAV_2Disks_withoutChef_FromManagedDisks.json" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\testConfig.ps1" />
+    <None Include="Resources\TEMPLATE_VM_CREATION\testWinRM.ps1" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProjectInstaller.resx">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Logs\Data\AS_WEB\" />
+    <Folder Include="Logs\Data\ES\" />
+    <Folder Include="Resources\CREATE_VM_FROM_IMAGE\Logs\QA-G-ASW000001\" />
+    <Folder Include="Resources\CREATE_VM_FROM_IMAGE\Logs\QA-G-ASW000002\" />
+    <Folder Include="Resources\CREATE_VM_FROM_IMAGE\Logs\QA-G-ASW000003\" />
+    <Folder Include="Resources\CREATE_VM_FROM_IMAGE\Logs\QA-G-ASW000004\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Logs\Actions\ServiceLog_29_07_2019.txt" />
+    <Content Include="Logs\Cooldowns\LastCreationAS.txt" />
+    <Content Include="Logs\Cooldowns\LastCreationES.txt" />
+    <Content Include="Logs\Indexes\IndexData.txt" />
+    <Content Include="Logs\Metrics\AS_WEB.txt" />
+    <Content Include="Logs\Metrics\ES.txt" />
+    <Content Include="Logs\ServiceLogs\ServiceLog_25_07_2019.txt" />
+    <Content Include="Logs\ServiceLogs\ServiceLog_29_07_2019.txt" />
+    <Content Include="Resources\CREATE_VM_FROM_IMAGE\IPConfigs\ipFix.txt" />
+    <Content Include="Resources\CREATE_VM_FROM_IMAGE\Logs\historyTrack\creationRecords.txt" />
+    <Content Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\arrangeDisks.txt" />
+    <Content Include="Resources\CREATE_VM_FROM_IMAGE\resources\Templates\AS_WEB\terraform.exe" />
+    <Content Include="Resources\CREATE_VM_FROM_IMAGE\test.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
