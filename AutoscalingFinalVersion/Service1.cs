@@ -24,7 +24,7 @@ namespace AutoscalingFinalVersion
         //Http service declaration
         private HttpServer httpServer = null;
         private System.Threading.Thread threadHttp;
-        
+
         //Time before evaluating requests
         private int updateTimeEvaluation = 15000;
 
@@ -37,7 +37,7 @@ namespace AutoscalingFinalVersion
         private int activeAS = 0;
 
         //AS Status array
-        private string[,] ASMachinesStatus = new string[5,3]; //index,Name,ip,status(up/down)
+        private string[,] ASMachinesStatus = new string[5, 3]; //index,Name,ip,status(up/down)
 
         //Time stamp last creation or deletion
         private long timeMillisecond = 0;
@@ -63,7 +63,7 @@ namespace AutoscalingFinalVersion
             httpServer = new MyHttpServer(8080);
             threadHttp = new System.Threading.Thread(new System.Threading.ThreadStart(httpServer.listen));
             threadHttp.Start();
-                     
+
             //Retrieve the last index given to all kinds of machines
             string pathIndexes = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\Indexes\\IndexData.txt";
             StreamReader srIndexes = new StreamReader(pathIndexes);
@@ -74,7 +74,7 @@ namespace AutoscalingFinalVersion
                 indexesValues.Add(indexValue);
             }
             srIndexes.Close();
-     
+
             indexESDATA = GetLastInstanceOf(indexesValues, "indexESDATA");
             fullfillTableAS();
         }
@@ -84,7 +84,7 @@ namespace AutoscalingFinalVersion
             string pathFile = AppDomain.CurrentDomain.BaseDirectory + "Logs\\Cooldowns\\LastCreationAS.txt";
             StreamReader sr = new StreamReader(pathFile);
             string asInformation = sr.ReadLine();
-            string[]asInformationSplitted = asInformation.Split(':');
+            string[] asInformationSplitted = asInformation.Split(':');
             timeMillisecond = Convert.ToInt64(asInformationSplitted[1]);
             sr.Close();
         }
@@ -98,6 +98,7 @@ namespace AutoscalingFinalVersion
                 using (StreamWriter sw = File.CreateText(pathFile))
                 {
                     sw.WriteLine("TimeStamp:" + timeMillisecond); //make the same for the other kinds
+                    sw.Close();
                 }
             }
             else
@@ -107,6 +108,7 @@ namespace AutoscalingFinalVersion
                 using (StreamWriter sw = File.CreateText(pathFile))
                 {
                     sw.WriteLine("TimeStamp:" + timeMillisecond); //make the same for the other kinds
+                    sw.Close();
                 }
             }
         }
@@ -115,7 +117,7 @@ namespace AutoscalingFinalVersion
         {
             string pathIndexesFile = AppDomain.CurrentDomain.BaseDirectory + "\\Resources\\CREATE_VM_FROM_IMAGE\\IPConfigs\\ipFix.txt";
             StreamReader sr = new StreamReader(pathIndexesFile);
-            
+
             int i = 0;
             activeAS = 0;
             string asInformation;
@@ -125,7 +127,7 @@ namespace AutoscalingFinalVersion
                 ASMachinesStatus[i, 0] = splittedInfomrations[0];
                 ASMachinesStatus[i, 1] = splittedInfomrations[1];
                 ASMachinesStatus[i, 2] = splittedInfomrations[2];
-                if(ASMachinesStatus[i, 2] == "up")
+                if (ASMachinesStatus[i, 2] == "up")
                 {
                     activeAS = activeAS + 1;
                 }
@@ -236,6 +238,7 @@ namespace AutoscalingFinalVersion
                 using (StreamWriter sw = File.CreateText(pathIndexesFile))
                 {
                     sw.WriteLine("indexESDATA:" + indexESDATA); //make the same for the other kinds
+                    sw.Close();
                 }
             }
             else
@@ -245,6 +248,7 @@ namespace AutoscalingFinalVersion
                 using (StreamWriter sw = File.CreateText(pathIndexesFile))
                 {
                     sw.WriteLine("indexESDATA:" + indexESDATA); //make the same for the other kinds
+                    sw.Close();
                 }
             }
 
@@ -324,7 +328,7 @@ namespace AutoscalingFinalVersion
                         srMetrics.Close();
 
                         foreach (string line in informations)
-                        { 
+                        {
                             string[] infoSplited = line.Split(':');
                             switch (infoSplited[0])
                             {
@@ -338,7 +342,7 @@ namespace AutoscalingFinalVersion
                                 case "timeStamp":
                                     break;
                                 case "metric1":
-                                    AnalyseRequest("metric1", metrics, machineType, infoSplited,filePath);
+                                    AnalyseRequest("metric1", metrics, machineType, infoSplited, filePath);
                                     break;
                                 case "metric2":
                                     AnalyseRequest("metric2", metrics, machineType, infoSplited, filePath);
@@ -353,7 +357,7 @@ namespace AutoscalingFinalVersion
                 }
             }
         }
-        private int GetMetricUP (List<string> Metrics, string meticName)
+        private int GetMetricUP(List<string> Metrics, string meticName)
         {
             foreach (string a in Metrics)
             {
@@ -377,10 +381,10 @@ namespace AutoscalingFinalVersion
                 if (toCompare[0] == meticName)
                 {
                     string[] metricsSplitted = toCompare[1].Split('/');
-                    if(activeAS >=1)
+                    if (activeAS >= 1)
                     {
                         //WriteToFileActions("Threshold: " + metricsSplitted[activeAS]);
-                        return Convert.ToInt32(metricsSplitted[activeAS-1]);
+                        return Convert.ToInt32(metricsSplitted[activeAS - 1]);
                     }
                     else
                     {
@@ -389,6 +393,28 @@ namespace AutoscalingFinalVersion
                 }
             }
             return 0;
+        }
+
+        public void ExecuteCommand(string Command)
+        {
+            var Process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = "/K " + Command,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                }
+            };
+
+            Process.Start();
+
+            while (!Process.StandardOutput.EndOfStream)
+            {
+                string line = Process.StandardOutput.ReadLine();
+                WriteToFileActions(line);
+            }
         }
 
         private int createMachineAnalise(string metricName, List<string> metrics, string machineType, string[] infoSplited, string filePath, int thresholdUP)
@@ -437,6 +463,7 @@ namespace AutoscalingFinalVersion
                                 index = index + 1;
                             }
                             WriteToFileActions("Creating machine AS_WEB " + nameCutted[1]);
+                            ExecuteCommand("powershell -command \" & C:\\Users\\Fernandezblanco\\source\\repos\\AutoscalingFinalVersion\\AutoscalingFinalVersion\\bin\\Debug\\Resources\\CREATE_VM_FROM_IMAGE\\createMachineTest2.ps1 \"");
                             WriteIndexesAS();
                             asGlobalStatus(1);
                             cooldownAS = true;
@@ -545,7 +572,7 @@ namespace AutoscalingFinalVersion
                 File.Delete(pathIndexesFile);
                 using (StreamWriter sw = File.CreateText(pathIndexesFile))
                 {
-                   
+
                     int i = 0;
                     for (i = 0; i < 5; i++)
                     {
@@ -567,7 +594,7 @@ namespace AutoscalingFinalVersion
         protected override void OnStop()
         {
             WriteToLogFile("Service is stopped at " + DateTime.Now);
-            WriteIndexes();
+            //WriteIndexes();
         }
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
@@ -587,6 +614,7 @@ namespace AutoscalingFinalVersion
                 using (StreamWriter sw = File.CreateText(filepath))
                 {
                     sw.WriteLine(Message);
+                    sw.Close();
                 }
             }
             else
@@ -594,6 +622,7 @@ namespace AutoscalingFinalVersion
                 using (StreamWriter sw = File.AppendText(filepath))
                 {
                     sw.WriteLine(Message);
+                    sw.Close();
                 }
             }
         }
