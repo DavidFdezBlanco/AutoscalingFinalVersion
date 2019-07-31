@@ -1,0 +1,6 @@
+c:\windows\system32\inetsrv\appcmd.exe set config -section:applicationPools "/[name='EDMAppPool'].processModel.loadUserProfile:true"
+c:\windows\system32\inetsrv\appcmd.exe set config -section:applicationPools "/[name='PulseAppPool'].processModel.loadUserProfile:true"
+c:\windows\system32\inetsrv\appcmd.exe set config -section:applicationPools "/[name='EDPWSAppPool'].processModel.loadUserProfile:true"
+c:\windows\system32\inetsrv\appcmd.exe set config -section:applicationPools "/[name='FileUploadWSAppPool'].processModel.loadUserProfile:true"
+c:\windows\system32\inetsrv\appcmd.exe set config -section:applicationPools "/[name='FlyDocWSAppPool'].processModel.loadUserProfile:true"
+c:\windows\system32\inetsrv\appcmd.exe set config -section:applicationPools "/[name='PulseHPAppPool'].processModel.loadUserProfile:true"
