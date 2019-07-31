@@ -394,8 +394,20 @@ namespace AutoscalingFinalVersion
             }
             return 0;
         }
+        
+        public void createMachine(string index, string time) //to be changed to read the environment variables directly from a file
+        {
+            string ResourceGroupName = "WE-QA-G";
+            string location = "West Europe";
+            string vnetName = "WE-QA-G-VNET";
+            string vsubnetName = "AS";
+            string sprintNumber = "174";
+            
+            ExecuteCommand("powershell -command \" & {C:\\Users\\Fernandezblanco\\source\\repos\\AutoscalingFinalVersion\\AutoscalingFinalVersion\\bin\\Debug\\Resources\\CREATE_VM_FROM_IMAGE\\createMachine.ps1 -ResourceGroupName " + ResourceGroupName + " -location \'" + location + "\' -vnetName " + vnetName + " -vsubnetName " + vsubnetName + " -index \'" + index + "\' -sprintNumber " + sprintNumber + "}\"" , time, index);
 
-        public void ExecuteCommand(string Command)
+        }
+
+        public void ExecuteCommand(string Command, string time, string index)
         {
             var Process = new Process
             {
@@ -413,7 +425,8 @@ namespace AutoscalingFinalVersion
             while (!Process.StandardOutput.EndOfStream)
             {
                 string line = Process.StandardOutput.ReadLine();
-                WriteToFileActions(line);
+                WriteCreationLogs(index, line,time);
+                
             }
         }
 
@@ -463,7 +476,8 @@ namespace AutoscalingFinalVersion
                                 index = index + 1;
                             }
                             WriteToFileActions("Creating machine AS_WEB " + nameCutted[1]);
-                            ExecuteCommand("powershell -command \" & C:\\Users\\Fernandezblanco\\source\\repos\\AutoscalingFinalVersion\\AutoscalingFinalVersion\\bin\\Debug\\Resources\\CREATE_VM_FROM_IMAGE\\createMachineTest2.ps1 \"");
+                            string time = DateTime.Now.ToString("dd-MM-yyyy-HH-mm");
+                            createMachine(nameCutted[1], time);
                             WriteIndexesAS();
                             asGlobalStatus(1);
                             cooldownAS = true;
@@ -594,6 +608,7 @@ namespace AutoscalingFinalVersion
         protected override void OnStop()
         {
             WriteToLogFile("Service is stopped at " + DateTime.Now);
+            threadHttp.Abort();
             //WriteIndexes();
         }
         private void OnElapsedTime(object source, ElapsedEventArgs e)
@@ -626,6 +641,37 @@ namespace AutoscalingFinalVersion
                 }
             }
         }
+
+        public void WriteCreationLogs(string index, string Message, string time)
+        {
+            string FileBase = AppDomain.CurrentDomain.BaseDirectory;
+            string path = FileBase + "Resources\\CREATE_VM_FROM_IMAGE\\Logs\\QA-G-ASW" + index;
+            Console.WriteLine(FileBase);
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            string filepath = FileBase + "Resources\\CREATE_VM_FROM_IMAGE\\Logs\\QA-G-ASW" + index + "\\" + time + ".txt";
+            Console.WriteLine(filepath);
+            if (!File.Exists(filepath))
+            {
+                // Create a file to write to.   
+                using (StreamWriter sw = File.CreateText(filepath))
+                {
+                    sw.WriteLine(Message);
+                }
+            }
+            else
+            {
+                using (StreamWriter sw = File.AppendText(filepath))
+                {
+                    sw.WriteLine(Message);
+                }
+            }
+        }
+
         public void WriteToFileActions(string Message)
         {
             string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\Actions";
@@ -650,5 +696,7 @@ namespace AutoscalingFinalVersion
                 }
             }
         }
+
+
     }
 }

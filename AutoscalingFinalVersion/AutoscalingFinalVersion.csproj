@@ -168,6 +168,7 @@
     <Content Include="Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\arrangeDisks.txt" />
     <Content Include="Resources\CREATE_VM_FROM_IMAGE\resources\Templates\AS_WEB\terraform.exe" />
     <Content Include="Resources\CREATE_VM_FROM_IMAGE\test.txt" />
+    <Content Include="Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
