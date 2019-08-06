@@ -386,6 +386,11 @@ namespace AutoscalingFinalVersion
                         //WriteToFileActions("Threshold: " + metricsSplitted[activeAS]);
                         return Convert.ToInt32(metricsSplitted[activeAS - 1]);
                     }
+                    else if(activeAS == 1)
+                    {
+                        int threshold = Convert.ToInt32(metricsSplitted[activeAS - 1]) - 600;
+                        return threshold;
+                    }
                     else
                     {
                         return -1;
@@ -437,14 +442,7 @@ namespace AutoscalingFinalVersion
             while (!Process.StandardOutput.EndOfStream)
             {
                 string line = Process.StandardOutput.ReadLine();
-                if(String.Equals(line, "\r\n"))
-                {
-                    //do nothing To skip the only \n lines introduced by chef
-                }
-                else
-                {
-                    WriteCreationLogs(index, line, time);
-                }
+                 WriteCreationLogs(index, line, time);
             }
         }
 
