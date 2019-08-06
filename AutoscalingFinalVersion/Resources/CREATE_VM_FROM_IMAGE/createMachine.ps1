@@ -11,8 +11,19 @@ Param
     $SourceVM = "WE-QA-G-AS-W01"
 )
 
+if($index -like "*00000*")
+{
+	Write-Host "Creating machine with index $index"
+}
+else
+{
+	$index = "00000" + $index
+	Write-Host "Creating machine, index not found and adapted to $index"
+}
+
+
 $StartDate=(GET-DATE)
-$prefixlogName = Get-Date -format "dd-MMM-yyyy-HH-mm"
+$prefixlogName = Get-Date -format "dd-MM-yyyy-HH-mm"
 $logNameFile = "$prefixlogName-logs.txt" #rédiriger le output lors de l'exécution du fichier sur le service
 
 #get to the current directory

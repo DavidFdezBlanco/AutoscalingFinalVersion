@@ -45,7 +45,16 @@ if (!$outputExists)
 {
    Write-Error $outputExists
    exit $alreadyConfiguredCode
-}   
+}
+
+#Checks the if the azure provider exisits
+$pathAzureProvider = (Get-Item -Path "$path\.terraform\plugins\windows_amd64\").FullName
+$azureExists = Test-Path -Path $pathAzureProvider
+if (!$pathAzureProvider)
+{
+   Write-Error $pathAzureProvider
+   exit $alreadyConfiguredCode
+}  
 
 #Checks the if the Resource group repository already exists and if not it creates it
 $newPath = "$currentDirectory\resources\Templates\$ResourceGroupName"
@@ -61,13 +70,42 @@ if(!$res)
     Write-Host "Not possible to create directory"
     exit $errorCode
 }
+Write-Host "Directory $res created succesfully"
 
+
+$res = New-Item -Path "$newPath\.terraform" -ItemType Directory
+if(!$res)
+{
+    Write-Host "Not possible to create directory"
+    exit $errorCode
+}
+Write-Host "Directory $res created succesfully"
+
+
+$res = New-Item -Path "$newPath\.terraform\plugins" -ItemType Directory
+if(!$res)
+{
+    Write-Host "Not possible to create directory"
+    exit $errorCode
+}
+Write-Host "Directory $res created succesfully"
+
+
+$res = New-Item -Path "$newPath\.terraform\plugins\windows_amd64" -ItemType Directory
+if(!$res)
+{
+    Write-Host "Not possible to create directory"
+    exit $errorCode
+}
 Write-Host "Directory $res created succesfully"
 
 #File configuration and content specialisation 
 Write-Host "Copying the terraform variables and ouputs"
 copy-item -path "$pathVariables" -destination "$newpath\variables.tf"
 copy-item -path "$pathOutput" -destination "$newpath\output.tf"
+copy-item -path "$pathAzureProvider\terraform-provider-azurerm_v1.31.0_x4.exe" -Destination "$newpath\.terraform\plugins\windows_amd64\terraform-provider-azurerm_v1.31.0_x4.exe"
+copy-item -path "$pathAzureProvider\lock.json" -Destination "$newpath\.terraform\plugins\windows_amd64\lock.json"
+
 
 Write-Host "Adapting variables to the current environment" 
 (Get-Content "$newpath\variables.tf") -replace 'XXXlocationXXX', "$location" | Set-Content "$newpath\variables.tf"

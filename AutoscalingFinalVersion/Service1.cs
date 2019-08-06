@@ -402,9 +402,21 @@ namespace AutoscalingFinalVersion
             string vnetName = "WE-QA-G-VNET";
             string vsubnetName = "AS";
             string sprintNumber = "174";
-            
-            ExecuteCommand("powershell -command \" & {C:\\Users\\Fernandezblanco\\source\\repos\\AutoscalingFinalVersion\\AutoscalingFinalVersion\\bin\\Debug\\Resources\\CREATE_VM_FROM_IMAGE\\createMachine.ps1 -ResourceGroupName " + ResourceGroupName + " -location \'" + location + "\' -vnetName " + vnetName + " -vsubnetName " + vsubnetName + " -index \'" + index + "\' -sprintNumber " + sprintNumber + "}\"" , time, index);
+            string pathbase = AppDomain.CurrentDomain.BaseDirectory;
+            ExecuteCommand("powershell -command \" & {"+ pathbase + "Resources\\CREATE_VM_FROM_IMAGE\\createMachine.ps1 -ResourceGroupName " + ResourceGroupName + " -location \'" + location + "\' -vnetName " + vnetName + " -vsubnetName " + vsubnetName + " -index \'" + index + "\' -sprintNumber " + sprintNumber + "}\"" , time, index);
 
+        }
+
+        public void destroyMachine(string index, string time) //to be changed to read the environment variables directly from a file
+        {
+            string ResourceGroupName = "WE-QA-G";
+            string location = "West Europe";
+            string vnetName = "WE-QA-G-VNET";
+            string vsubnetName = "AS";
+            string sprintNumber = "174";
+            string pathbase = AppDomain.CurrentDomain.BaseDirectory;
+            ExecuteCommand("powershell -command \" & {" + pathbase + "Resources\\DESTROY_VM\\removeMachine.ps1 -ResourceGroupName " + ResourceGroupName + " -index \'" + index + "\' }\"", time, index);
+            
         }
 
         public void ExecuteCommand(string Command, string time, string index)
@@ -425,8 +437,14 @@ namespace AutoscalingFinalVersion
             while (!Process.StandardOutput.EndOfStream)
             {
                 string line = Process.StandardOutput.ReadLine();
-                WriteCreationLogs(index, line,time);
-                
+                if(String.Equals(line, "\n"))
+                {
+                    //do nothing To skip the only \n lines introduced by chef
+                }
+                else
+                {
+                    WriteCreationLogs(index, line, time);
+                }
             }
         }
 
@@ -477,10 +495,10 @@ namespace AutoscalingFinalVersion
                             }
                             WriteToFileActions("Creating machine AS_WEB " + nameCutted[1]);
                             string time = DateTime.Now.ToString("dd-MM-yyyy-HH-mm");
-                            createMachine(nameCutted[1], time);
                             WriteIndexesAS();
                             asGlobalStatus(1);
                             cooldownAS = true;
+                            createMachine(nameCutted[1], time);
                         }
                     }
                     else if (machineType == "ES")
@@ -538,9 +556,11 @@ namespace AutoscalingFinalVersion
                                 index = index - 1;
                             }
                             WriteToFileActions("Destroying machine AS_WEB " + nameCutted[1]);
+                            string time = DateTime.Now.ToString("dd-MM-yyyy-HH-mm");
                             WriteIndexesAS();
                             asGlobalStatus(1);
                             cooldownAS = true;
+                            destroyMachine(nameCutted[1], time);
                         }
                     }
                     else if (machineType == "ES")
@@ -608,7 +628,6 @@ namespace AutoscalingFinalVersion
         protected override void OnStop()
         {
             WriteToLogFile("Service is stopped at " + DateTime.Now);
-            threadHttp.Abort();
             //WriteIndexes();
         }
         private void OnElapsedTime(object source, ElapsedEventArgs e)
@@ -643,7 +662,8 @@ namespace AutoscalingFinalVersion
         }
 
         public void WriteCreationLogs(string index, string Message, string time)
-        {
+        { //to be tested, to add the destroy part
+            
             string FileBase = AppDomain.CurrentDomain.BaseDirectory;
             string path = FileBase + "Resources\\CREATE_VM_FROM_IMAGE\\Logs\\QA-G-ASW" + index;
             Console.WriteLine(FileBase);

@@ -1,26 +1,46 @@
-﻿#.\removeMachine.ps1 -ResourceGroupName "WE-QA-G" -index "000001" -computerName "QA-G-ASW000001" -localUserName "adminqag" -localPassword "c4YfR_W9Z%qTray3Fv7" -machineIP 10.132.4.7 -usernameDomain "testadg.esker.corp\asadmin" -passwordDomain "J&%q34LuZnEc!"
-
+﻿#.\removeMachine.ps1 -ResourceGroupName "WE-QA-G" -index "000001"
 param (
 	[Parameter(Mandatory=$true)] $ResourceGroupName,
-	[Parameter(Mandatory=$True)] $computerName,
-    [Parameter(Mandatory=$True)] $localUserName,
-    [Parameter(Mandatory=$True)] $localPassword,
-    [Parameter(Mandatory=$True)] $machineIP,
-    [Parameter(Mandatory=$True)] $usernameDomain,
-    [Parameter(Mandatory=$True)] $passwordDomain,
     [Parameter(Mandatory=$True)] $index
 )
-
-$StartDate=(GET-DATE)
-$logNameFile = "$prefixlogName-delete-logs.txt" #rédiriger le output lors de l'exécution du fichier sur le service
 
 #get to the current directory and change to it
 $sourceFile = $MyInvocation.MyCommand.Source
 $currentDirectory = $sourceFile.Replace($MyInvocation.MyCommand.Name,"")
 cd $currentDirectory
-
 $parentPath = Split-Path -parent $currentDirectory
 $scriptsCreationPath = "$parentPath\CREATE_VM_FROM_IMAGE"
+
+$computerName = "QA-G-ASW" + $index
+$localUserName = "adminqag"
+$localPassword = "c4YfR_W9Z%qTray3Fv7"
+$usernameDomain = "testadg.esker.corp\asadmin"
+$passwordDomain = "J&%q34LuZnEc!"
+
+if($index -like "*00000*")
+{
+	Write-Host "Destroying machine with index $index"
+}
+else
+{
+	$index = "00000" + $index
+	Write-Host "Destroying machine, index not found and adapted to $index"
+}
+
+Write-Host ""
+#Retrieve the IP Needed
+foreach($line in Get-Content "$scriptsCreationPath\IPConfigs\ipFix.txt") {
+    if($line -like "*$index*"){ 
+	$nameMachine,$machineIP,$machineStatus= $line -split ','
+        Write-Host " "
+        Write-Host "--------------- Destroying machine: ---------------"
+        Write-Host "Name: $nameMachine, IP: $machineIP Status: $machineStatus"
+        Write-Host " "
+    }
+}
+
+$StartDate=(GET-DATE)
+$logNameFile = "$prefixlogName-delete-logs.txt" #rédiriger le output lors de l'exécution du fichier sur le service
 
 #log-in local and session stablishment
 $secstr = New-Object -TypeName System.Security.SecureString
@@ -69,7 +89,14 @@ Write-Host "--------------- Starting Terraform execution ---------------"
 .\terraform.exe apply -auto-approve -no-color
 Write-Host " "
 Pop-Location
-#>
+
+$user = "david.fernandez@esker.fr"
+$pass = "Deefelboss1"
+$secstr = New-Object -TypeName System.Security.SecureString
+$pass.ToCharArray() | ForEach-Object {$secstr.AppendChar($_)}
+$cred = new-object -typename System.Management.Automation.PSCredential -argumentlist $user, $secstr
+Connect-AzureRmAccount -Credential $cred
+
 $resourcesLeftToDelete = Get-AzureRmResource | Where {$_.Name -like "*$index*"}
 Foreach($resource in $resourcesLeftToDelete)
 {
@@ -83,5 +110,5 @@ Foreach($resource in $resourcesLeftToDelete)
 
 $EndDate=(GET-DATE)
 $time_taken = NEW-TIMESPAN –Start $StartDate –End $EndDate
-Write-Host "Machine $nameMachine deleted after $name $time_taken. " *>> $currentDirectory\Logs\historyTrack\creationRecords.txt
-Write-Host "        Configuration logs are saved at $currentDirectory\Logs\$nameMachine\$logNameFile" *>> $currentDirectory\Logs\historyTrack\creationRecords.txt
+Write-Host "Machine $nameMachine deleted after $name $time_taken. " *>> $scriptsCreationPath\Logs\historyTrack\creationRecords.txt
+Write-Host "        Configuration logs are saved at $currentDirectory\Logs\$nameMachine\$logNameFile" *>> $scriptsCreationPath\Logs\historyTrack\creationRecords.txt

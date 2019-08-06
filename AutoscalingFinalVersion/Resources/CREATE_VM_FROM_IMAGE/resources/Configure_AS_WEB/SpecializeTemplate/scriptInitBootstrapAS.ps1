@@ -35,6 +35,9 @@ if (!$help) {
     
     echo " " "######################################" "#####        Launching           #####" "######################################" " "
     
+    knife node delete $nodeName -yes
+    knife client delete $nodeName -yes
+
     knife bootstrap windows winrm -yes $ipVMtoBootsrap.IPAddressToString --node-name $nodeName --winrm-user $userNameSSH --winrm-password $userPassSSH --run-list $runList --environment $environment --bootstrap-vault-json $myOutput
     #il y a des problèmes avec les cookbooks sur la qag, voir avec julien quand il retourne
     
