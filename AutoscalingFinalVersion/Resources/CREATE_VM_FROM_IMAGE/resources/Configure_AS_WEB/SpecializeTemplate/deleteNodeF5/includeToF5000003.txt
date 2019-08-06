@@ -1,0 +1,2 @@
+tmsh modify /ltm pool ASG-WebAccess members delete {QA-G-ASW000003:http}
+tmsh delete ltm node QA-G-ASW000003

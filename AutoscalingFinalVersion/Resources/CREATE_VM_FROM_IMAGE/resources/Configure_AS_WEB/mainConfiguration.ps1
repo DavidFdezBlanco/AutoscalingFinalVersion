@@ -184,7 +184,9 @@ $globalsPath = "C:\Configure_AS_WEB\SpecializeTemplate\globalsASWeb.ps1"
 $commandCheckServices = {param($filepath, $globalsPath); & $filepath $globalsPath}
 Invoke-Command -Session $session -ScriptBlock $commandCheckServices -ArgumentList $checkServicesPath,$globalsPath
 
-#Set the VM in the F5 BigIP pools
+#Set the VM in the F5 BigIP pools.
+$fileToExecute = "$currentDirectory\SpecializeTemplate\includeNodeF5\includeToF5$computerName.txt"
+.\PLINK.EXE "$localUserName@10.132.1.4" -pw $localPassword -m $fileToExecute -batch
 
 #DELEGATION from RS on AS
 

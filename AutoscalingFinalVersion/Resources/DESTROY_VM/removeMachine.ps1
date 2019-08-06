@@ -39,8 +39,10 @@ foreach($line in Get-Content "$scriptsCreationPath\IPConfigs\ipFix.txt") {
     }
 }
 
+
 $StartDate=(GET-DATE)
-$logNameFile = "$prefixlogName-delete-logs.txt" #rédiriger le output lors de l'exécution du fichier sur le service
+$prefixlogName = Get-Date -format "dd-MM-yyyy-HH-mm"
+$logNameFile = "$prefixlogName-logs.txt" #rédiriger le output lors de l'exécution du fichier sur le service
 
 #log-in local and session stablishment
 $secstr = New-Object -TypeName System.Security.SecureString
@@ -77,9 +79,17 @@ while($true){
 }
 
 #Delete node from chef
-knife node delete "$computerName" -yes
+Write-Host "Deleting node from chef"
+knife node delete $computerName -yes
+Write-Host "Deleting client from chef"
+knife client delete $computerName -yes
 
 #Sortir du F5
+$fileToExecute = "$scriptsCreationPath\resources\Configure_AS_WEB\SpecializeTemplate\deleteNodeF5\deleteFromF5QA-G-ASW$index.txt"
+Push-Location "$scriptsCreationPath\resources\Configure_AS_WEB\"
+.\PLINK.EXE "$localUserName@10.132.1.4" -pw $localPassword -m $fileToExecute -batch
+Pop-Location
+
 
 #Delete with terraform
 Push-Location "$scriptsCreationPath\resources\Templates\$ResourceGroupName\"
@@ -111,4 +121,4 @@ Foreach($resource in $resourcesLeftToDelete)
 $EndDate=(GET-DATE)
 $time_taken = NEW-TIMESPAN –Start $StartDate –End $EndDate
 Write-Host "Machine $nameMachine deleted after $name $time_taken. " *>> $scriptsCreationPath\Logs\historyTrack\creationRecords.txt
-Write-Host "        Configuration logs are saved at $currentDirectory\Logs\$nameMachine\$logNameFile" *>> $scriptsCreationPath\Logs\historyTrack\creationRecords.txt
+Write-Host "        Configuration logs are saved at $scriptsCreationPath\Logs\$nameMachine\$logNameFile" *>> $scriptsCreationPath\Logs\historyTrack\creationRecords.txt

@@ -437,7 +437,7 @@ namespace AutoscalingFinalVersion
             while (!Process.StandardOutput.EndOfStream)
             {
                 string line = Process.StandardOutput.ReadLine();
-                if(String.Equals(line, "\n"))
+                if(String.Equals(line, "\r\n"))
                 {
                     //do nothing To skip the only \n lines introduced by chef
                 }
@@ -520,7 +520,7 @@ namespace AutoscalingFinalVersion
             }
             else
             {
-                if (Convert.ToInt64(infoSplited[1]) < thresholdDown)
+                if (Convert.ToInt64(infoSplited[1]) <= thresholdDown)
                 {
                     DateTime baseDate = new DateTime(1970, 1, 1);
                     TimeSpan diff = DateTime.Now - baseDate;
