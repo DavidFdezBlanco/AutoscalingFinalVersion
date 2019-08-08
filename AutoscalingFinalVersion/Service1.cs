@@ -381,7 +381,7 @@ namespace AutoscalingFinalVersion
                 if (toCompare[0] == meticName)
                 {
                     string[] metricsSplitted = toCompare[1].Split('/');
-                    if (activeAS >= 1)
+                    if (activeAS > 1)
                     {
                         //WriteToFileActions("Threshold: " + metricsSplitted[activeAS]);
                         return Convert.ToInt32(metricsSplitted[activeAS - 1]);

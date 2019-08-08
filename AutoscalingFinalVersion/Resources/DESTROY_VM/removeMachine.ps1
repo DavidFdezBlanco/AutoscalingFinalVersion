@@ -61,8 +61,8 @@ Invoke-Command -Session $session -ScriptBlock $commandRunTemplateClean -Argument
 Start-Sleep -Seconds 2
 $i = 0 
 while($true){
-    Enter-PSSession -ComputerName $machineIP -Credential $cred  *> C:\Users\adminqag\Desktop\Autoscaling\CREATE_VM_FROM_IMAGE\resources\Templates\WE-QA-G\test.txt
-    $output = Get-Content -Path C:\Users\adminqag\Desktop\Autoscaling\CREATE_VM_FROM_IMAGE\resources\Templates\WE-QA-G\test.txt
+    Enter-PSSession -ComputerName $machineIP -Credential $cred  *> "$scriptsCreationPath\resources\Templates\WE-QA-G\test.txt"
+    $output = Get-Content -Path "$scriptsCreationPath\resources\Templates\WE-QA-G\test.txt"
     
     if($output -eq $null){
         Write-Host "$computerName running"
@@ -84,12 +84,13 @@ knife node delete $computerName -yes
 Write-Host "Deleting client from chef"
 knife client delete $computerName -yes
 
-#Sortir du F5
-$fileToExecute = "$scriptsCreationPath\resources\Configure_AS_WEB\SpecializeTemplate\deleteNodeF5\deleteFromF5QA-G-ASW$index.txt"
-Push-Location "$scriptsCreationPath\resources\Configure_AS_WEB\"
-.\PLINK.EXE "$localUserName@10.132.1.4" -pw $localPassword -m $fileToExecute -batch
-Pop-Location
-
+#Deleting node form F5
+Write-Host "Deleting node from F5"
+$fileToExecute = $scriptsCreationPath+"\resources\Configure_AS_WEB\SpecializeTemplate\deleteNodeF5\deleteFromF5QA-G-ASW$index.txt"
+Write-Host $fileToExecute
+$pathDeleteF5 = $scriptsCreationPath+"\resources\Configure_AS_WEB\"
+cd $pathDeleteF5
+Start-Process powershell -Verb runAs -ArgumentList "& C:\Users\adminqag\Desktop\AutoscalingFinalVersion\AutoscalingFinalVersion\bin\Debug\Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\PLINK.exe -batch '$localUserName@10.132.1.4' -pw '$localPassword' -m '$fileToExecute'"
 
 #Delete with terraform
 Push-Location "$scriptsCreationPath\resources\Templates\$ResourceGroupName\"

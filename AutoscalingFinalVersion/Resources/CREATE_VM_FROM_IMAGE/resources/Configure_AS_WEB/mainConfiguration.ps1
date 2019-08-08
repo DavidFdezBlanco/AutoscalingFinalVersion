@@ -13,6 +13,7 @@ param (
 $sourceFile = $MyInvocation.MyCommand.Source
 $currentDirectory = $sourceFile.Replace($MyInvocation.MyCommand.Name,"")
 cd $currentDirectory
+Write-Host "$currentDirectory"
 
 #log-in local and session stablishment
 $secstr = New-Object -TypeName System.Security.SecureString
@@ -43,9 +44,13 @@ Invoke-Command -Session $session -ScriptBlock $commandOrderPath -ArgumentList $o
 #Waiting restart
 Start-Sleep -Seconds 2
 $i = 0 
+
+$parentPathCreateVM = Split-Path -parent $currentDirectory
+$fileOutputRestart = "$parentPathCreateVM\Templates\WE-QA-G\test.txt"
+Write-Host "$fileOutputRestart"
 while($true){
-    Enter-PSSession -ComputerName $machineIP -Credential $cred  *> C:\Users\adminqag\Desktop\Autoscaling\CREATE_VM_FROM_IMAGE\resources\Templates\WE-QA-G\test.txt
-    $output = Get-Content -Path C:\Users\adminqag\Desktop\Autoscaling\CREATE_VM_FROM_IMAGE\resources\Templates\WE-QA-G\test.txt
+    Enter-PSSession -ComputerName $machineIP -Credential $cred  *> $fileOutputRestart
+    $output = Get-Content -Path $fileOutputRestart
     
     if($output -eq $null){
         Write-Host "$computerName restarted"
@@ -70,8 +75,8 @@ Invoke-Command -Session $session -ScriptBlock $commandOrderPath -ArgumentList $o
 Start-Sleep -Seconds 2
 
 while($true){
-    Enter-PSSession -ComputerName  $machineIP -Credential $cred  *> C:\Users\adminqag\Desktop\Autoscaling\CREATE_VM_FROM_IMAGE\resources\Templates\WE-QA-G\test.txt
-    $output = Get-Content -Path C:\Users\adminqag\Desktop\Autoscaling\CREATE_VM_FROM_IMAGE\resources\Templates\WE-QA-G\test.txt
+    Enter-PSSession -ComputerName $machineIP -Credential $cred  *> $fileOutputRestart
+    $output = Get-Content -Path $fileOutputRestart
     
     if($output -eq $null){
         Write-Host "$computerName restarted"
@@ -86,6 +91,7 @@ while($true){
         break
     }
 }
+
 
 #Getting into the good domain and unjoining the last one
 #Getting out of an old domain, to do before destroying the machine
@@ -99,8 +105,8 @@ Invoke-Command -Session $session -ScriptBlock $commandRunTemplateClean -Argument
 Start-Sleep -Seconds 2
 
 while($true){
-    Enter-PSSession -ComputerName  $machineIP -Credential $cred  *> C:\Users\adminqag\Desktop\Autoscaling\CREATE_VM_FROM_IMAGE\resources\Templates\WE-QA-G\test.txt
-    $output = Get-Content -Path C:\Users\adminqag\Desktop\Autoscaling\CREATE_VM_FROM_IMAGE\resources\Templates\WE-QA-G\test.txt
+    Enter-PSSession -ComputerName $machineIP -Credential $cred  *> $fileOutputRestart
+    $output = Get-Content -Path $fileOutputRestart
     
     if($output -eq $null){
         Write-Host "$computerName restarted"
@@ -115,6 +121,7 @@ while($true){
         break
     }
 }
+
 
 #Getting into the good domain
 Write-Host "Specialize template"
@@ -128,8 +135,8 @@ Invoke-Command -Session $session -ScriptBlock $commandRunTemplateClean -Argument
 Start-Sleep -Seconds 2
 
 while($true){
-    Enter-PSSession -ComputerName $machineIP -Credential $cred  *> C:\Users\adminqag\Desktop\Autoscaling\CREATE_VM_FROM_IMAGE\resources\Templates\WE-QA-G\test.txt
-    $output = Get-Content -Path C:\Users\adminqag\Desktop\Autoscaling\CREATE_VM_FROM_IMAGE\resources\Templates\WE-QA-G\test.txt
+    Enter-PSSession -ComputerName $machineIP -Credential $cred  *> $fileOutputRestart
+    $output = Get-Content -Path $fileOutputRestart
     
     if($output -eq $null){
         Write-Host "$computerName restarted"
@@ -144,6 +151,7 @@ while($true){
         break
     }
 }
+
 
 
 #Connect once as Asadmin to make the user be in the HKEY_Users registry, dont need to do anything with the session.
@@ -185,17 +193,10 @@ $commandCheckServices = {param($filepath, $globalsPath); & $filepath $globalsPat
 Invoke-Command -Session $session -ScriptBlock $commandCheckServices -ArgumentList $checkServicesPath,$globalsPath
 
 #Set the VM in the F5 BigIP pools.
-$fileToExecute = "$currentDirectory\SpecializeTemplate\includeNodeF5\includeToF5$computerName.txt"
-.\PLINK.EXE "$localUserName@10.132.1.4" -pw $localPassword -m $fileToExecute -batch
-
-#DELEGATION from RS on AS
-
-#On RS only
-
-#Checks on the VM
-
-Exit-PSSession
-
+Write-Host "Adding node to the F5 load balancer"
+$fileToExecute = $currentDirectory+"SpecializeTemplate\includeNodeF5\includeToF5$computerName.txt"
+Write-Host "Executing $fileToExecute"
+Start-Process powershell -Credential $cred -ArgumentList "& C:\Users\adminqag\Desktop\AutoscalingFinalVersion\AutoscalingFinalVersion\bin\Debug\Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\PLINK.exe -batch '$localUserName@10.132.1.4' -pw '$localPassword' -m '$fileToExecute'"
 
 <#
 #Command Reboot

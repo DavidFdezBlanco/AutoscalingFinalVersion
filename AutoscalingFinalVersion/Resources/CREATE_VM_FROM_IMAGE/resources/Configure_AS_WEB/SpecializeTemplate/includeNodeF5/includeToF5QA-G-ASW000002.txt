@@ -1,6 +1,3 @@
-tmsh modify /ltm pool ASG-WebAccess members delete {QA-G-ASW000002:http}
-tmsh delete ltm node QA-G-ASW000002
-
 tmsh create ltm node QA-G-ASW000002 address 10.132.4.8
-tmsh modify /ltm pool ASG-WebAccess members add { QA-G-ASW000002:http {address 10.132.4.8 session user-enabled state user-up }}
+tmsh modify ltm pool ASG-WebAccess members add { QA-G-ASW000002:http {address 10.132.4.8 session user-enabled state user-up }}
 tmsh show ltm pool ASG-WebAccess members
