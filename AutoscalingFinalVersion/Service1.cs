@@ -13,6 +13,7 @@ using System.Timers;
 using Microsoft.Azure.Management.Automation;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using CredentialManagement;
 
 namespace AutoscalingFinalVersion
 {
@@ -399,7 +400,38 @@ namespace AutoscalingFinalVersion
             }
             return 0;
         }
-        
+
+        public static string GetPasswordFromCredentialManager(string PasswordName)
+        {
+            using (var cred = new Credential())
+            {
+                cred.Target = PasswordName;
+                cred.Load();
+                return cred.Password;
+            }
+        }
+        public static string GetUsernameFromCredentialManager(string PasswordName)
+        {
+            using (var cred = new Credential())
+            {
+                cred.Target = PasswordName;
+                cred.Load();
+                return cred.Username;
+            }
+        }
+
+        public static bool SetCredentials(
+             string target, string username, string password, PersistanceType persistenceType)
+        {
+            return new Credential
+            {
+                Target = target,
+                Username = username,
+                Password = password,
+                PersistanceType = persistenceType
+            }.Save();
+        }
+
         public void createMachine(string index, string time) //to be changed to read the environment variables directly from a file
         {
             string ResourceGroupName = "WE-QA-G";
@@ -408,8 +440,13 @@ namespace AutoscalingFinalVersion
             string vsubnetName = "AS";
             string sprintNumber = "174";
             string pathbase = AppDomain.CurrentDomain.BaseDirectory;
-            ExecuteCommand("powershell -command \" & {"+ pathbase + "Resources\\CREATE_VM_FROM_IMAGE\\createMachine.ps1 -ResourceGroupName " + ResourceGroupName + " -location \'" + location + "\' -vnetName " + vnetName + " -vsubnetName " + vsubnetName + " -index \'" + index + "\' -sprintNumber " + sprintNumber + "}\"" , time, index);
-
+            string adminqagUser = GetUsernameFromCredentialManager("adminqag");
+            string adminqagPass = GetPasswordFromCredentialManager("adminqag");
+            WriteToLogFile("ADMINQAG => User : " + adminqagUser + " Pass : " + adminqagPass);
+            string asadminUser = GetUsernameFromCredentialManager("asadmin");
+            string asadminPass = GetPasswordFromCredentialManager("asadmin");
+            WriteToLogFile("ASADMIN => User : " + asadminUser + " Pass : " + asadminPass);
+            ExecuteCommand("powershell -command \" & {"+ pathbase + "Resources\\CREATE_VM_FROM_IMAGE\\createMachine.ps1 -ResourceGroupName " + ResourceGroupName + " -location \'" + location + "\' -vnetName " + vnetName + " -vsubnetName " + vsubnetName + " -index \'" + index + "\' -sprintNumber " + sprintNumber + " -adminqagUser \'" + adminqagUser + "\' -adminqagPass \'" + adminqagPass + "\' -asadminUser \'" + asadminUser + "\' -asadminPass \'" + asadminPass + "\'}\"", time, index); 
         }
 
         public void destroyMachine(string index, string time) //to be changed to read the environment variables directly from a file

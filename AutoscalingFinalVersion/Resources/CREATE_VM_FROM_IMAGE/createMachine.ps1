@@ -7,9 +7,16 @@ Param
 	[Parameter(Mandatory=$true)]$vsubnetName,
     [Parameter(Mandatory=$true)]$index,
     [Parameter(Mandatory=$true)]$sprintNumber,
+    [Parameter(Mandatory=$true)]$adminqagUser,
+    [Parameter(Mandatory=$true)]$adminqagPass,
+    [Parameter(Mandatory=$true)]$asadminUser,
+    [Parameter(Mandatory=$true)]$asadminPass,
 	$StorageType = "Standard_D4s_v2",
     $SourceVM = "WE-QA-G-AS-W01"
 )
+
+Write-Host "Adminqag User: $adminqagUser et Pass: $adminqagPass"
+Write-Host "Asadmin User: $asadminUser et Pass: $asadminPass"
 
 if($index -like "*00000*")
 {
@@ -98,10 +105,10 @@ Pop-Location
 
 #To change how to retrieve the ip from the terraform tfstate with regex parsing
 cd $currentDirectory
-.\resources\Configure_AS_WEB\mainConfiguration.ps1 -computerName "$nameMachine" -localUserName "adminqag" -localPassword "c4YfR_W9Z%qTray3Fv7" -machineIP $ipMachine -usernameDomain "testadg.esker.corp\asadmin" -passwordDomain "J&%q34LuZnEc!" 
+.\resources\Configure_AS_WEB\mainConfiguration.ps1 -computerName "$nameMachine" -localUserName $adminqagUser -localPassword "$adminqagPass" -machineIP $ipMachine -usernameDomain "testadg.esker.corp\$asadminUser" -passwordDomain "$asadminPass" 
 $EndDate=(GET-DATE)
 $time_taken = NEW-TIMESPAN -Start $StartDate -End $EndDate
 Write-Host "Machine $nameMachine created after $name $time_taken. " *>> $currentDirectory\Logs\historyTrack\creationRecords.txt
 Write-Host "        Configuration logs are saved at $currentDirectory\Logs\$nameMachine\$logNameFile" *>> $currentDirectory\Logs\historyTrack\creationRecords.txt
 
-#.\createMachine.ps1  -location "West Europe" -ResourceGroupName "WE-QA-G" -vnetName "WE-QA-G-VNET" -vsubnetName "AS" -index "000001" -sprintNumber "174"
+#.\createMachine.ps1  -location "West Europe" -ResourceGroupName "WE-QA-G" -vnetName "WE-QA-G-VNET" -vsubnetName "AS" -index "000001" -sprintNumber "174" -adminqagUser "adminqag" -adminqagPass "c4YfR_W9Z%qTray3Fv7" -asadminUser "asadmin" -asadminPass "J&%q34LuZnEc!"

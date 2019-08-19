@@ -198,6 +198,7 @@ $fileToExecute = $currentDirectory+"SpecializeTemplate\includeNodeF5\includeToF5
 Write-Host "Executing $fileToExecute"
 Start-Process powershell -Credential $cred -ArgumentList "& C:\Users\adminqag\Desktop\AutoscalingFinalVersion\AutoscalingFinalVersion\bin\Debug\Resources\CREATE_VM_FROM_IMAGE\resources\Configure_AS_WEB\PLINK.exe -batch '$localUserName@10.132.1.4' -pw '$localPassword' -m '$fileToExecute'"
 
+Exit-PSSession
 <#
 #Command Reboot
 Write-Host "Rebooting"

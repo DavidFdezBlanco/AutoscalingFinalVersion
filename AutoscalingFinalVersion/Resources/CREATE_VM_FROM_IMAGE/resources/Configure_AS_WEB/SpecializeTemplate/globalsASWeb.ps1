@@ -14,8 +14,6 @@ $GLOBAL_SERVICES_TO_START = @("ABBYY.Licensing.FineReaderEngine.Windows.10.0","S
 $GLOBAL_SERVICES_TO_DELAY_START = @("SLAPDFG","FGEVENT")
 $GLOBAL_COMPUTERNAME= $env:computername
 #Retrieve ip
-$GLOBAL_NETWORK_IP = 10.132.4.7
-<#
 $GLOBAL_NETWORK_IP =  (
     Get-NetIPConfiguration |
     Where-Object {
@@ -23,7 +21,7 @@ $GLOBAL_NETWORK_IP =  (
         $_.NetAdapter.Status -ne "Disconnected"
     }
 ).IPv4Address.IPAddress
-#>
+
 $GLOBAL_DOMAIN="testadg.esker.corp"
 $GLOBAL_DOMAIN_ADMIN_USER="$GLOBAL_DOMAIN\asadmin"
 $GLOBAL_DOMAIN_PATH="OU=QAG-Computers,DC=testadg,DC=esker,DC=corp"
