@@ -1,1 +1,0 @@
-reg add HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\StreamProvider /v LastFullPayloadTime /t REG_DWORD /d 0
