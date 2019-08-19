@@ -1,9 +1,0 @@
-At line:1 char:354
-+ ... Pass c4YfR_W9Z%qTray3Fv7 -asadminUser asadmin -asadminPass J&%q34LuZn ...
-+                                                                 ~
-The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
-quotation marks ("&") to pass it as part of a string.
-    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
-    + FullyQualifiedErrorId : AmpersandNotAllowed
- 
-
