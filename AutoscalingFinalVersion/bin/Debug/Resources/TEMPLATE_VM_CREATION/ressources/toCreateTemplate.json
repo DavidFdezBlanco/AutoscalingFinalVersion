@@ -1,0 +1,12 @@
+{
+  "description": "This file contains the list of VMs to create",
+  "vmList": [
+    {
+      "vmName": "XXXNAMEXXX",
+      "resourceGroup": "XXXRESGROUPXXX",
+      "templateName": "windows_1NIC_NOAV_2Disks_withoutChef_FromManagedDisks.json",
+      "OS": "windows",
+      "OSfullName": "Microsoft Windows Server"
+    }
+  ]
+}

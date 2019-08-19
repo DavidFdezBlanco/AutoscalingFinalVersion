@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "osType": { "value": "Windows" },
+    "vmName": { "value": "XXXNAMEXXX" },
+    "vmSize": { "value": "Standard_DS4_v2" },
+    "location": { "value": "westeurope" },
+    "virtualNetworkName": { "value": "XXXVNETXXX" },
+    "subnetName": { "value": "XXXSUBNETXXX" },
+    "privateIP": { "value":  "XXXIPXXX" },
+    "enableAcceleratedNetworking": { "value": false },
+    "OSDiskName": { "value": "XXXOSDiskXXX" },
+    "DATADisk1Name": { "value": "XXXDisk1XXX" },
+    "DATADisk2Name": { "value": "XXXDisk2XXX" },
+    "storageAccountNameForBootDiagnostics": { "value": "eskerbootdiagnostics" }
+    }
+  }
